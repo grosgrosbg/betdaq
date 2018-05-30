@@ -349,12 +349,13 @@ class ErrorMap(Enum):
     InvalidPassword = 405
     PunterIsBlacklisted = 406
     PunterNotRegisteredAsMultipleLayer = 425
-    PunterAlreadyRegisteredForHeartbeat = 462
-    PunterNotRegisteredForHeartbeat = 463
+    PunterAlreadyRegisteredForHeartbeat = 463
+    PunterNotRegisteredForHeartbeat = 462
     ThresholdSpecifiedTooSmall = 473
     UnmatchedOrderCouldResult = 477
     PunterNotAuthorisedForAPI = 533
     MarketIsForRealMoney = 597
     MarketIsForPlayMoney = 598
+    PunterNotAuthenticated = 612
     CannotChangeToSPIfUnmatched = 892
     InvalidUsername = 1000

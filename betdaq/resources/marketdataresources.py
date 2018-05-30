@@ -40,6 +40,33 @@ def parse_deep_markets(sports):
     return markets
 
 
+def parse_event_tree(event_classifiers):
+
+    event_list = []
+
+    for event_classifier in event_classifiers:
+        event = {
+            'id': event_classifier.get('Id'), 'name': event_classifier.get('Name'),
+            'display_order': event_classifier.get('DisplayOrder'), 'parent_id': event_classifier.get('ParentId'),
+            'multi_allowed': event_classifier.get('IsEnabledForMultiples'),
+            'tournament_id': event_classifier.get('tournament_id'),
+            'tournament_name': event_classifier.get('tournament_name'),
+            'competition_id': event_classifier.get('competition_id'),
+            'competition_name': event_classifier.get('competition_name'), 'markets': parse_market(
+                event_classifier.get('Markets', []), {'event_name': event_classifier.get('Name'),
+                                                      'tournament_id': event_classifier.get('tournament_id'),
+                                                      'tournament_name': event_classifier.get('tournament_name'),
+                                                      'competition_id': event_classifier.get('competition_id'),
+                                                      'competition_name': event_classifier.get('competition_name'),
+                                                      }
+            ),
+            'sub_events': parse_event_tree(event_classifier.get('EventClassifiers', []))}
+
+        event_list.append(event)
+
+    return event_list
+
+
 def parse_runners(data):
     return {'runner_id': data.get('Id'),
             'runner_name': data.get('Name'),
@@ -88,7 +115,7 @@ def parse_market_prices(mkt):
             'market_start_time': make_tz_naive(mkt.get('StartTime')),
             'runners': [parse_runner_prices(runner) for runner in mkt.get('Selections', [])],
             'is_play_market': mkt.get('IsPlayMarket'),
-            'status': MarketStatus(int(mkt.get('Status'))) if mkt.get('Status') else None,
+            'status': MarketStatus(int(mkt.get('Status'))).name if mkt.get('Status') else None,
             'number_of_winners': floatify(mkt.get('NumberOfWinningSelections')),
             'withdrawal_sequence_number': mkt.get('WithdrawalSequenceNumber'),
             'market_display_order': mkt.get('DisplayOrder'),

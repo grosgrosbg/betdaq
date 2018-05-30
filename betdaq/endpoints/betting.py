@@ -2,7 +2,7 @@
 import datetime
 
 from betdaq.enums import Boolean
-from betdaq.utils import clean_locals, listy_mc_list
+from betdaq.utils import listy_mc_list
 from betdaq.endpoints.baseendpoint import BaseEndpoint
 from betdaq.errorparsers.betting import err_cancel_market, err_suspend_orders
 from betdaq.resources.bettingresources import (
@@ -13,7 +13,7 @@ from betdaq.resources.bettingresources import (
 
 class Betting(BaseEndpoint):
 
-    def get_orders(self, SequenceNumber=-1, wantSettledOrdersOnUnsettledMarkets=Boolean.T.value):
+    def get_orders(self, sequence_number=-1, want_settled_orders_on_unsettled_markets=Boolean.T.value):
         """
         Get the initial list of orders that's need to be taken into consideration when establishing positions. 
         Information about the following orders will be returned:
@@ -23,36 +23,39 @@ class Betting(BaseEndpoint):
             •	suspended orders
             •	some settled or voided orders under some conditions
 
-        :param SequenceNumber: lower bound cutoff for sequence updates to include, 
+        :param sequence_number: lower bound cutoff for sequence updates to include,
                                -1 will set to earliest possible sequence.
-        :type SequenceNumber: int
-        :param wantSettledOrdersOnUnsettledMarkets: Flag indicating whether or not information about settled orders 
+        :type sequence_number: int
+        :param want_settled_orders_on_unsettled_markets: Flag indicating whether or not information about settled orders
                                                     on unsettled markets should be returned.
-        :type wantSettledOrdersOnUnsettledMarkets: bool
+        :type want_settled_orders_on_unsettled_markets: bool
         :return: orders that have changed.
         """
-        params = clean_locals(locals())
+        params = {
+            'SequenceNumber': sequence_number,
+            'wantSettledOrdersOnUnsettledMarkets': want_settled_orders_on_unsettled_markets
+        }
         date_time_sent = datetime.datetime.utcnow()
         response = self.request('ListBootstrapOrders', params, secure=True)
         data = self.process_response(response, date_time_sent, 'Orders')
         return [parse_orders(order) for order in data.get('data', {}).get('Order', [])] if data.get('data') else []
 
-    def get_orders_diff(self, SequenceNumber):
+    def get_orders_diff(self, sequence_number):
         """
         Get a list of orders for the logged in user that have changed since a given sequence number.
         Utilised to maintain position information after initial position is established with list_orders.
 
-        :param SequenceNumber: lower bound cutoff for sequence updates to include.
-        :type SequenceNumber: int
+        :param sequence_number: lower bound cutoff for sequence updates to include.
+        :type sequence_number: int
         :return: orders that have changed.
         """
-        params = clean_locals(locals())
+        params = {'SequenceNumber': sequence_number}
         date_time_sent = datetime.datetime.utcnow()
         response = self.request('ListOrdersChangedSince', params, secure=True)
         data = self.process_response(response, date_time_sent, 'Orders')
         return [parse_orders(order) for order in data.get('data', {}).get('Order', [])] if data.get('data') else []
 
-    def get_single_order(self, OrderId):
+    def get_single_order(self, order_id):
         """
         Get full detail and history about an individual order.
 
@@ -60,21 +63,22 @@ class Betting(BaseEndpoint):
         :type order_id: int
         :return: single orders history and current status.
         """
-        params = clean_locals(locals())
+        params = {'OrderId': order_id}
         date_time_sent = datetime.datetime.utcnow()
         response = self.request('GetOrderDetails', params, secure=True)
         data = self.process_response(response, date_time_sent, None)
         return listy_mc_list(parse_single_order(data.get('data', {})) if data.get('data') else {})
 
-    def place_orders(self, order_list, WantAllOrNothingBehaviour=Boolean.T.value, receipt=True):
+    def place_orders(self, order_list, want_all_or_nothing_behaviour=Boolean.T.value, receipt=True):
         """
         Places one or more orders at exchange. 
         Receipt determines whether to wait for complete matching cycle or just return the order ID.
         
         :param order_list: List of orders to be sent to exchange
         :type order_list: list of betdaq_py.filters.create_order
-        :param WantAllOrNothingBehaviour: defines whether to kill all orders on any error or place orders independently.
-        :type WantAllOrNothingBehaviour: betdaq_py.enums.Boolean
+        :param want_all_or_nothing_behaviour: defines whether to kill all orders on any error or place orders
+         independently.
+        :type want_all_or_nothing_behaviour: betdaq_py.enums.Boolean
         :param receipt: whether to wait for matching cycle and return full info of order or not.
         :type receipt: bool
         :return: the order ID or full order information depending on receipt.
@@ -86,7 +90,7 @@ class Betting(BaseEndpoint):
         else:
             method = 'PlaceOrdersNoReceipt'
             params = self.client.secure_types['%sRequest' % method](
-                WantAllOrNothingBehaviour=WantAllOrNothingBehaviour, Orders={'Order': order_list}
+                WantAllOrNothingBehaviour=want_all_or_nothing_behaviour, Orders={'Order': order_list}
             )
         response = self.request(method, params, secure=True)
         data = self.process_response(response, date_time_sent, 'Orders')
@@ -173,15 +177,16 @@ class Betting(BaseEndpoint):
         data = self.process_response(response, date_time_sent, 'Orders', error_handler=err_suspend_orders)
         return [parse_suspended_order(suspend) for suspend in data.get('data', [])] if data.get('data') else []
 
-    def suspend_orders_by_market(self, MarketId):
+    def suspend_orders_by_market(self, market_ids):
         """
         Suspend all orders on a given market.
 
-        :param MarketIds: market id to be suspend orders on.
-        :type MarketIds: ints
+        :param market_ids: market id to be suspend orders on.
+        :type market_ids: ints
         :return: information on the suspension status of each order.
         """
-        params = clean_locals(locals())
+        # params = clean_locals(locals())
+        params = {'MarketIds': market_ids}
         date_time_sent = datetime.datetime.utcnow()
         response = self.request('SuspendAllOrdersOnMarket', params, secure=True)
         data = self.process_response(response, date_time_sent, 'Orders', error_handler=err_suspend_orders)
@@ -200,7 +205,7 @@ class Betting(BaseEndpoint):
 
     def unsuspend_orders(self, order_ids):
         """
-        Unsuspends one or more suspended orders
+        Unsuspend one or more suspended orders
         
         :param order_ids: list of order ids to unsuspend.
         :type order_ids: list
@@ -211,5 +216,5 @@ class Betting(BaseEndpoint):
         )
         date_time_sent = datetime.datetime.utcnow()
         response = self.request('UnsuspendOrders', params, secure=True)
-        data = self.process_response(response, date_time_sent, None)
+        self.process_response(response, date_time_sent, None)
         return []

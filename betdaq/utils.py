@@ -1,9 +1,9 @@
-
 import pytz
 import datetime
 from decimal import Decimal
 from dateutil.parser import parse
 from betdaq.enums import ErrorMap
+from betdaq import exceptions
 
 
 def get_tag(elem):
@@ -37,7 +37,7 @@ def make_tz_naive(date):
     if isinstance(date, str):
         try:
             date = parse_time_str(date).strftime('%Y-%m-%d %H:%M:%S.%f')
-        except:
+        except ValueError:
             pass
     if isinstance(date, datetime.datetime):
         date = date.astimezone(pytz.UTC).replace(tzinfo=None).strftime('%Y-%m-%d %H:%M:%S.%f')
@@ -65,7 +65,7 @@ def check_status_code(response, codes=None):
     codes = codes or [0]
     response_code = response.get('ReturnStatus', {}).get('Code')
     if response_code not in codes:
-        raise eval(ErrorMap(response_code).name)
+        raise exceptions.eval_error(ErrorMap(response_code).name)
 
 
 def floatify(deci):

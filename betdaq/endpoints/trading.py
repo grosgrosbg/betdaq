@@ -51,6 +51,7 @@ class Trading(BaseEndpoint):
         """
         params = clean_locals(locals())
         date_time_sent = datetime.datetime.utcnow()
+
         response = self.request('RegisterHeartbeat', params, secure=True)
         return self.process_response(response, date_time_sent, None)
 
@@ -65,7 +66,7 @@ class Trading(BaseEndpoint):
         response = self.request('DeregisterHeartbeat', params, secure=True)
         return self.process_response(response, date_time_sent, None)
 
-    def change_hearbeat(self, HeartbeatAction=HeartbeatAction.CancelOrders.value, ThresholdMs=6000):
+    def change_heartbeat(self, HeartbeatAction=HeartbeatAction.CancelOrders.value, ThresholdMs=6000):
         """
         Update the parameter of Heartbeat.
 
