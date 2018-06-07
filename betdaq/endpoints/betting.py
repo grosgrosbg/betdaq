@@ -40,6 +40,16 @@ class Betting(BaseEndpoint):
         data = self.process_response(response, date_time_sent, 'Orders')
         return [parse_orders(order) for order in data.get('data', {}).get('Order', [])] if data.get('data') else []
 
+    def get_maximum_sequence_number_order(self):
+        """
+        Get the maximum sequence number for orders
+
+        :return: Maximum sequence Number
+        """
+        params = {'SequenceNumber': -1, 'wantSettledOrdersOnUnsettledMarkets': Boolean.T.value}
+        response = self.request('ListBootstrapOrders', params, secure=True)
+        return response.get('MaximumSequenceNumber')
+
     def get_orders_diff(self, sequence_number):
         """
         Get a list of orders for the logged in user that have changed since a given sequence number.
@@ -78,7 +88,7 @@ class Betting(BaseEndpoint):
         :type order_list: list of betdaq_py.filters.create_order
         :param want_all_or_nothing_behaviour: defines whether to kill all orders on any error or place orders
          independently.
-        :type want_all_or_nothing_behaviour: betdaq_py.enums.Boolean
+        :type want_all_or_nothing_behaviour: bool
         :param receipt: whether to wait for matching cycle and return full info of order or not.
         :type receipt: bool
         :return: the order ID or full order information depending on receipt.
