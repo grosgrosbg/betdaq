@@ -10,10 +10,10 @@ with open('betdaq/__init__.py', 'r') as f:
     ).group(1)
 
 setup(
-    name="betdaq",
+    name="betdaq-cadenza",
     version=version,
-    author="Rory Cole",
-    author_email="rory.cole1990@gmail.com",
+    author="Benjamin Bezias",
+    author_email="benjaminbezias@gmail.com",
     description="Betdaq API Python wrapper",
     url="https://github.com/rozzac90/betdaq_py",
     packages=find_packages(),
