@@ -39,17 +39,17 @@ class Trading(BaseEndpoint):
         response = self.request('UnsuspendFromTrading', {}, secure=True)
         return self.process_response(response, date_time_sent, None)
 
-    def register_heartbeat(self, HeartbeatAction=HeartbeatAction.CancelOrders.value, ThresholdMs=6000):
+    def register_heartbeat(self, heartbeat_action=HeartbeatAction.CancelOrders.value, threshold_ms=6000):
         """
         Register the Punter as requiring a Heartbeat. Must send a Pulse < every ThresholdMs to stay alive.
         
-        :param HeartbeatAction: The action that should be taken if a Pulse is not received within the threshold. 
-        :type HeartbeatAction: betdaq_py.enums.HeartbeatAction
-        :param ThresholdMs: The maximum period (in milli-seconds) that can elapse between Pulse API calls being 
+        :param heartbeat_action: The action that should be taken if a Pulse is not received within the threshold.
+        :type heartbeat_action: betdaq_py.enums.HeartbeatAction
+        :param threshold_ms: The maximum period (in milli-seconds) that can elapse between Pulse API calls being
                             received before the system takes the relevant action. 
         :return: response of request success.
         """
-        params = clean_locals(locals())
+        params = {'HeartbeatAction': heartbeat_action, 'ThresholdMs': threshold_ms}
         date_time_sent = datetime.datetime.utcnow()
 
         response = self.request('RegisterHeartbeat', params, secure=True)
@@ -66,17 +66,17 @@ class Trading(BaseEndpoint):
         response = self.request('DeregisterHeartbeat', params, secure=True)
         return self.process_response(response, date_time_sent, None)
 
-    def change_heartbeat(self, HeartbeatAction=HeartbeatAction.CancelOrders.value, ThresholdMs=6000):
+    def change_heartbeat(self, heartbeat_action=HeartbeatAction.CancelOrders.value, threshold_ms=6000):
         """
         Update the parameter of Heartbeat.
 
-        :param HeartbeatAction: The action that should be taken if a Pulse is not received within the threshold. 
-        :type HeartbeatAction: betdaq_py.enums.HeartbeatAction
-        :param ThresholdMs: The maximum period (in milli-seconds) that can elapse between Pulse API calls being 
+        :param heartbeat_action: The action that should be taken if a Pulse is not received within the threshold.
+        :type heartbeat_action: betdaq_py.enums.HeartbeatAction
+        :param threshold_ms: The maximum period (in milli-seconds) that can elapse between Pulse API calls being
                             received before the system takes the relevant action. 
         :return: response of request success.
         """
-        params = clean_locals(locals())
+        params = {'HeartbeatAction': heartbeat_action, 'ThresholdMs': threshold_ms}
         date_time_sent = datetime.datetime.utcnow()
         response = self.request('ChangeHeartbeatRegistration', params, secure=True)
         return self.process_response(response, date_time_sent, None)

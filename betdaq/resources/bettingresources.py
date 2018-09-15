@@ -1,4 +1,3 @@
-
 from betdaq.utils import make_tz_naive, floatify
 from betdaq.enums import OrderActionType, OrderStatus, OrderKillType, Polarity, MarketStatus
 
@@ -47,11 +46,11 @@ def parse_orders(order):
     return {
         'order_id': order.get('Id'),
         'commission_information': {
-                'gross_settlement_amount': floatify(
-                    order.get('OrderCommissionInformation', {}).get('GrossSettlementAmount')
-                ) if order.get('OrderCommissionInformation', {}).get('GrossSettlementAmount') else None,
-                'commission': floatify(order.get('OrderCommissionInformation', {}).get('OrderCommission'))
-                if order.get('OrderCommissionInformation', {}).get('OrderCommission') else None,
+            'gross_settlement_amount': floatify(
+                order.get('OrderCommissionInformation', {}).get('GrossSettlementAmount')
+            ) if order.get('OrderCommissionInformation', {}).get('GrossSettlementAmount') else None,
+            'commission': floatify(order.get('OrderCommissionInformation', {}).get('OrderCommission'))
+            if order.get('OrderCommissionInformation', {}).get('OrderCommission') else None,
         } if order.get('OrderCommissionInformation') else {},
         'runner_id': order.get('SelectionId'),
         'market_id': order.get('MarketId'),
@@ -78,21 +77,22 @@ def parse_orders(order):
         'commission_base_rate': floatify(order.get('PunterCommissionBasis')),
         'commission_take_rate': floatify(order.get('TakeCommissionRate')),
         'commission_make_rate': floatify(order.get('MakeCommissionRate')),
-        }
+    }
 
 
 def parse_single_order(order):
     return {
         'order_id': order.get('Id'),
         'settlement_information': {
-                'gross_settlement_amount': floatify(order.get('OrderCommissionInformation', {}).get('GrossSettlementAmount'))
-                if order.get('OrderCommissionInformation') else None,
-                'order_commission': floatify(order.get('OrderCommissionInformation', {}).get('OrderCommission'))
-                if order.get('OrderCommissionInformation') else None,
-                'market_commission': floatify(order.get('OrderCommissionInformation', {}).get('MarketCommission'))
-                if order.get('OrderCommissionInformation') else None,
-                'settlement_time': make_tz_naive(order.get('OrderCommissionInformation', {}).get('MarketSettledDate'))
-                if order.get('OrderCommissionInformation') else None,
+            'gross_settlement_amount': floatify(
+                order.get('OrderCommissionInformation', {}).get('GrossSettlementAmount'))
+            if order.get('OrderCommissionInformation') else None,
+            'order_commission': floatify(order.get('OrderCommissionInformation', {}).get('OrderCommission'))
+            if order.get('OrderCommissionInformation') else None,
+            'market_commission': floatify(order.get('OrderCommissionInformation', {}).get('MarketCommission'))
+            if order.get('OrderCommissionInformation') else None,
+            'settlement_time': make_tz_naive(order.get('OrderCommissionInformation', {}).get('MarketSettledDate'))
+            if order.get('OrderCommissionInformation') else None,
         },
         'audit_log': [{'timestamp': make_tz_naive(log.get('Time')),
                        'matched_size': floatify(log.get('MatchedOrderInformation', {}).get('MatchedStake'))
@@ -102,11 +102,12 @@ def parse_single_order(order):
                        'matched_price': floatify(log.get('MatchedOrderInformation', {}).get('PriceMatched'))
                        if log.get('MatchedOrderInformation') else None,
                        'matched_order_id': log.get('MatchedOrderInformation', {}).get('MatchedOrderID')
-                       if log.get('MatchedOrderInformation')else None,
+                       if log.get('MatchedOrderInformation') else None,
                        'maker': log.get('MatchedOrderInformation', {}).get('WasMake')
                        if log.get('MatchedOrderInformation') else None,
                        'order_commission': floatify(log.get('CommissionInformation', {}).get('OrderCommission')),
-                       'gross_settlement_amount': floatify(log.get('CommissionInformation', {}).get('GrossSettlementAmount')),
+                       'gross_settlement_amount': floatify(
+                           log.get('CommissionInformation', {}).get('GrossSettlementAmount')),
                        'order_action': OrderActionType(int(log.get('OrderActionType'))).name,
                        'requested_size': floatify(log.get('RequestedStake')),
                        'total_size': floatify(log.get('TotalStake')),
@@ -143,4 +144,4 @@ def parse_single_order(order):
         'customer_reference': order.get('PunterReferenceNumber'),
         'market_type': order.get('MarketType'),
         'expected_withdrawal_sequence_number': order.get('ExpectedWithdrawalSequenceNumber'),
-        }
+    }

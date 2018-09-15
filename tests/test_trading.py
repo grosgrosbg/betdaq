@@ -40,7 +40,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.trading.Trading.process_response')
     @mock.patch('betdaq.endpoints.trading.Trading.request', return_value=mock.Mock())
     def test_register_heartbeat(self, mock_request, mock_process_response):
-        self.trading.register_heartbeat(HeartbeatAction=HeartbeatAction.CancelOrders.value, ThresholdMs=6000)
+        self.trading.register_heartbeat(heartbeat_action=HeartbeatAction.CancelOrders.value, threshold_ms=6000)
 
         mock_request.assert_called_once_with(
             'RegisterHeartbeat', {'HeartbeatAction': 1, 'ThresholdMs': 6000}, secure=True
@@ -58,7 +58,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.trading.Trading.process_response')
     @mock.patch('betdaq.endpoints.trading.Trading.request', return_value=mock.Mock())
     def test_change_heartbeat(self, mock_request, mock_process_response):
-        self.trading.change_hearbeat(HeartbeatAction=HeartbeatAction.CancelOrders.value, ThresholdMs=6000)
+        self.trading.change_heartbeat(heartbeat_action=HeartbeatAction.CancelOrders.value, threshold_ms=6000)
 
         mock_request.assert_called_once_with(
             'ChangeHeartbeatRegistration', {'HeartbeatAction': 1, 'ThresholdMs': 6000}, secure=True

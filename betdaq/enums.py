@@ -5,10 +5,10 @@ from enum import Enum
 class HeartbeatAction(Enum):
     """
     Action to be performed when a threshold period has expired without a Pulse having been received.
-    
-    :var CancelOrders: cancel all unmatched orders.
-    :var SuspendOrders: suspend all unmatched orders.
-    :var SuspendPunter: suspend punter.
+
+    CancelOrders: cancel all unmatched orders.
+    SuspendOrders: suspend all unmatched orders.
+    SuspendPunter: suspend punter.
     """
     CancelOrders = 1
     SuspendOrders = 2
@@ -19,16 +19,16 @@ class OrderKillType(Enum):
     """
     Define how an order is handled when sent to exchange.
     
-    :var FillAndKill: After the initial attempt is made to match this order any unmatched portion of the order is 
+    illAndKill: After the initial attempt is made to match this order any unmatched portion of the order is 
     immediately cancelled.
-    :var FillOrKill: On the initial attempt to match this order if it is not possible to match a specified amount of 
+    FillOrKill: On the initial attempt to match this order if it is not possible to match a specified amount of 
     the order then none of the order will be matched. If it had been possible to match at least the specified amount 
     then the amount that can be matched will be matched and the remaining unmatched amount will be cancelled.
-    :var FillOrKillDontCancel: On the initial attempt to match this order if it is not possible to match a specified 
+    FillOrKillDontCancel: On the initial attempt to match this order if it is not possible to match a specified 
     mount of the order then none of the order will be matched. If it had been possible to match at least the specified 
     amount then the amount that can be matched will be matched and the remaining unmatched amount will be not be 
     cancelled but left as an unmatched order.
-    :var SPIfUnmatched: Same as Normal but any unmatched portion of the order is to be matched at SP when the market 
+    SPIfUnmatched: Same as Normal but any unmatched portion of the order is to be matched at SP when the market 
     is turned in-running (or completed).
     """
     Normal = 1
@@ -42,13 +42,13 @@ class MarketStatus(Enum):
     """
     The current status of a market.
     
-    :var INACTIVEW: The Market is not active and has never had any Orders issued against it.
-    :var ACTIVE: The Market it active (that is, Orders can be issued against it).
-    :var SUSPENDED: The Market is not currently active but it has not yet been completed.
-    :var CLOSED: The Market is completed. No further Orders can be issued against the Market but the result of the 
+    INACTIVE: The Market is not active and has never had any Orders issued against it.
+    ACTIVE: The Market it active (that is, Orders can be issued against it).
+    SUSPENDED: The Market is not currently active but it has not yet been completed.
+    CLOSED: The Market is completed. No further Orders can be issued against the Market but the result of the 
     Market is either not yet known or has not yet been entered.
-    :var SETTLED: The Market has been fully settled.
-    :var VOIDED: The Market has been voided. All matched Orders in this Market have also been voided.
+    SETTLED: The Market has been fully settled.
+    VOIDED: The Market has been voided. All matched Orders in this Market have also been voided.
     """
     INACTIVE = 1
     ACTIVE = 2
@@ -153,14 +153,14 @@ class OrderStatus(Enum):
     """
     The status of an order.
     
-    :var Unmatched: The order is active and has some amount available for matching (the order may be partially matched).
-    :var Matched: The order has not been settled and it does not have any unmatched amount. Either the order was fully 
+    Unmatched: The order is active and has some amount available for matching (the order may be partially matched).
+    Matched: The order has not been settled and it does not have any unmatched amount. Either the order was fully 
     matched or it was partially matched and then cancelled.
-    :var Cancelled: This order has been cancelled and at least some of the order was unmatched at the time of 
+    Cancelled: This order has been cancelled and at least some of the order was unmatched at the time of 
     expiration.
-    :var Settled: The order has been settled.
-    :var Voided: The order has been voided.
-    :var Suspended: At least some of this order is unmatched but the order is suspended and is not available 
+    Settled: The order has been settled.
+    Voided: The order has been voided.
+    Suspended: At least some of this order is unmatched but the order is suspended and is not available 
     for matching.
     """
     Unmatched = 1
@@ -183,10 +183,10 @@ class PostingCategory(Enum):
     """
     The categories of a posting.
     
-    :var Settlement: This posting resulted from the settlement, unsettlement or resettlement of a specific order.
-    :var Commission: This posting resulting from the charging of commission on market settlement, unsettlement or 
+    Settlement: This posting resulted from the settlement, unsettlement or resettlement of a specific order.
+    Commission: This posting resulting from the charging of commission on market settlement, unsettlement or 
     resettlement.
-    :var Other: This posting resulted from any other cause (for example, a lodgement or withdrawal). 
+    Other: This posting resulted from any other cause (for example, a lodgement or withdrawal). 
     """
     Settlement = 1
     Commission = 2
@@ -210,11 +210,11 @@ class PriceFormat(Enum):
     """
     The format of a price.
     
-    :var Decimal: The price is expressed in decimal format – in particular the price is the decimal representation of 
+    Decimal: The price is expressed in decimal format – in particular the price is the decimal representation of 
     the payout for 1 currency unit stake.
-    :var Fractional: The price is expressed in fractional format – in particular the fraction is the winnings 
+    Fractional: The price is expressed in fractional format – in particular the fraction is the winnings 
     for 1 currency unit stake.
-    :var American: The price is expressed in American format – in particular if the price is greater than 0 it means 
+    American: The price is expressed in American format – in particular if the price is greater than 0 it means 
     the amount of winnings for 100 currency unit stake whereas if the price is less than zero it means the 
     amount of currency unit that needs to be staked to win 100 currency units.
     """
@@ -227,17 +227,17 @@ class SelectionStatus(Enum):
     """
     The current status of a Selection.
     
-    :var Inactive: The Selection is not active and has never had any Orders issued against it.
-    :var Active: The Selection is active (that is, Orders can be issued against it).
-    :var Suspended: Orders can not currently be placed on this Selection.
-    :var Withdrawn: The Entrant explicitly referenced by the Selection has withdrawn from the Event and so Orders 
+    Inactive: The Selection is not active and has never had any Orders issued against it.
+    Active: The Selection is active (that is, Orders can be issued against it).
+    Suspended: Orders can not currently be placed on this Selection.
+    Withdrawn: The Entrant explicitly referenced by the Selection has withdrawn from the Event and so Orders 
     can no longer be placed on this Selection.
-    :var BallotedOut: The Entrant explicitly referenced by the Selection has been balloted-out.
-    :var Voided: Orders can no longer be placed on this Selection and Orders previously placed for or against 
+    BallotedOut: The Entrant explicitly referenced by the Selection has been balloted-out.
+    Voided: Orders can no longer be placed on this Selection and Orders previously placed for or against 
     the Selection have been voided.
-    :var Completed: The Selection is completed. No further Orders can be issued against the Selection but the 
+    Completed: The Selection is completed. No further Orders can be issued against the Selection but the 
     result of the Selection is either not yet known or has not yet been entered.
-    :var Settled: This Selection has already been settled. Individual selections can be settled in advance of 
+    Settled: This Selection has already been settled. Individual selections can be settled in advance of 
     other selections in the market being settled (early settlement).
     """
     Inactive = 1
@@ -257,10 +257,10 @@ class WithdrawRepriceOption(Enum):
     unmatched parts of Orders, those parts that have already been matched will have the rule-4 deduction applied 
     regardless of the value of this option). 
     
-    :var Reprice: Reprice the unmatched parts of the Order. It is anticipated that this would be the 
+    Reprice: Reprice the unmatched parts of the Order. It is anticipated that this would be the 
     usual option specified by Layers.
-    :var Cancel: Cancel the unmatched parts of the Order.
-    :var DontReprice: Do not reprice the unmatched parts of the Order.
+    Cancel: Cancel the unmatched parts of the Order.
+    DontReprice: Do not reprice the unmatched parts of the Order.
     """
     Reprice = 1
     Cancel = 2

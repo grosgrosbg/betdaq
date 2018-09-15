@@ -20,14 +20,14 @@ class BettingTest(unittest.TestCase):
     def test_get_sports(self, mock_request, mock_process_response):
         self.market_data.get_sports()
 
-        mock_request.assert_called_once_with('ListTopLevelEvents', {}, secure=False)
+        mock_request.assert_called_once_with('ListTopLevelEvents', {'WantPlayMarkets': None}, secure=False)
         assert mock_process_response.call_count == 1
 
     @mock.patch('betdaq.endpoints.marketdata.MarketData.process_response')
     @mock.patch('betdaq.endpoints.marketdata.MarketData.request', return_value=mock.Mock())
     def test_get_sports_with_selections(self, mock_request, mock_process_response):
         self.market_data.get_sport_markets(
-            sport_ids=[10005], include_selections=True, WantDirectDescendentsOnly=Boolean.F.value
+            sport_ids=[10005], include_selections=True, want_direct_descendants_only=Boolean.F.value
         )
 
         method, args = mock_request.call_args
@@ -44,7 +44,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.marketdata.MarketData.request', return_value=mock.Mock())
     def test_get_sports_without_selections(self, mock_request, mock_process_response):
         self.market_data.get_sport_markets(
-            sport_ids=[10005], include_selections=False, WantDirectDescendentsOnly=Boolean.F.value
+            sport_ids=[10005], include_selections=False, want_direct_descendants_only=Boolean.F.value
         )
 
         method, args = mock_request.call_args
@@ -74,7 +74,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.marketdata.MarketData.process_response')
     @mock.patch('betdaq.endpoints.marketdata.MarketData.request', return_value=mock.Mock())
     def test_get_selection_changes(self, mock_request, mock_process_response):
-        self.market_data.get_selection_changes(SelectionSequenceNumber=1)
+        self.market_data.get_selection_changes(selection_sequence_number=1)
 
         mock_request.assert_called_once_with('ListSelectionsChangedSince', {'SelectionSequenceNumber': 1}, secure=False)
         assert mock_process_response.call_count == 1
@@ -82,7 +82,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.marketdata.MarketData.process_response')
     @mock.patch('betdaq.endpoints.marketdata.MarketData.request', return_value=mock.Mock())
     def test_get_market_withdrawals(self, mock_request, mock_process_response):
-        self.market_data.get_market_withdrawals(MarketId=1234)
+        self.market_data.get_market_withdrawals(market_id=1234)
 
         mock_request.assert_called_once_with('ListMarketWithdrawalHistory', {'MarketId': 1234}, secure=False)
         assert mock_process_response.call_count == 1
@@ -91,9 +91,9 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.marketdata.MarketData.request', return_value=mock.Mock())
     def test_get_prices(self, mock_request, mock_process_response):
         self.market_data.get_prices(
-            market_ids=[12, 34], ThresholdAmount=5.0, NumberForPricesRequired=-1, NumberAgainstPricesRequired=-1,
-            WantMarketMatchedAmount=Boolean.T.value, WantSelectionsMatchedAmounts=Boolean.T.value,
-            WantSelectionMatchedDetails=Boolean.T.value
+            market_ids=[12, 34], threshold_amount=5.0, number_for_prices_required=-1, number_against_prices_required=-1,
+            want_market_matched_amount=Boolean.T.value, want_selections_matched_amounts=Boolean.T.value,
+            want_selection_matched_details=Boolean.T.value
         )
 
         method, args = mock_request.call_args
@@ -111,7 +111,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.marketdata.MarketData.process_response')
     @mock.patch('betdaq.endpoints.marketdata.MarketData.request', return_value=mock.Mock())
     def test_get_odds_ladder(self, mock_request, mock_process_response):
-        self.market_data.get_odds_ladder(PriceFormat=PriceFormat.Decimal.value)
+        self.market_data.get_odds_ladder(price_format=PriceFormat.Decimal.value)
 
         mock_request.assert_called_once_with('GetOddsLadder', {'PriceFormat': 1}, secure=False)
         assert mock_process_response.call_count == 1

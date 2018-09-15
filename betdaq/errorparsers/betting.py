@@ -1,6 +1,6 @@
 
 from betdaq.classifiers.marketdata import parse_classifier
-from betdaq.utils import get_tag, get_attribs, listy_mc_list
+from betdaq.utils import listy_mc_list
 
 
 def err_cancel_market(response):

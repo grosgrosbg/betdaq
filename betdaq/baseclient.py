@@ -6,7 +6,7 @@ class BaseClient:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.wsdl_file = 'http://api.betdaq.com/v2.0/API.wsdl'
+        self.wsdl_file = 'https://api.betdaq.com/v2.0/API.wsdl'
         self.readonly_types = None
         self.secure_types = None
         self.secure_client, self.readonly_client = self.initialise_wsdl()
@@ -20,11 +20,11 @@ class BaseClient:
         :rtype: zeep.Client
         """
         secure_client = zeep.Client(
-            wsdl=self.wsdl_file, service_name='SecureService', port_name='SecureService', strict=False
+            wsdl=self.wsdl_file, service_name='SecureService', port_name='SecureService'
         )
         secure_client.set_default_soapheaders({'ExternalApiHeader': self.external_headers})
         readonly_client = zeep.Client(
-            wsdl=self.wsdl_file, service_name='ReadOnlyService', port_name='ReadOnlyService', strict=False
+            wsdl=self.wsdl_file, service_name='ReadOnlyService', port_name='ReadOnlyService'
         )
         readonly_client.set_default_soapheaders({'ExternalApiHeader': self.external_headers})
         return secure_client, readonly_client

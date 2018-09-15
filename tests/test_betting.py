@@ -17,7 +17,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.betting.Betting.process_response')
     @mock.patch('betdaq.endpoints.betting.Betting.request', return_value=mock.Mock())
     def test_get_orders(self, mock_request, mock_process_response):
-        self.betting.get_orders(SequenceNumber=-1, wantSettledOrdersOnUnsettledMarkets=Boolean.T.value)
+        self.betting.get_orders(sequence_number=-1, want_settled_orders_on_unsettled_markets=Boolean.T.value)
 
         mock_request.assert_called_once_with(
             'ListBootstrapOrders', {'SequenceNumber': -1, 'wantSettledOrdersOnUnsettledMarkets': 'true'}, secure=True
@@ -27,7 +27,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.betting.Betting.process_response')
     @mock.patch('betdaq.endpoints.betting.Betting.request', return_value=mock.Mock())
     def test_get_orders_diff(self, mock_request, mock_process_response):
-        self.betting.get_orders_diff(SequenceNumber=100)
+        self.betting.get_orders_diff(sequence_number=100)
 
         mock_request.assert_called_once_with('ListOrdersChangedSince', {'SequenceNumber': 100}, secure=True)
         assert mock_process_response.call_count == 1
@@ -35,7 +35,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.betting.Betting.process_response')
     @mock.patch('betdaq.endpoints.betting.Betting.request', return_value=mock.Mock())
     def test_get_single_order(self, mock_request, mock_process_response):
-        self.betting.get_single_order(OrderId=1)
+        self.betting.get_single_order(order_id=1)
 
         mock_request.assert_called_once_with('GetOrderDetails', {'OrderId': 1}, secure=True)
         assert mock_process_response.call_count == 1
@@ -43,7 +43,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.betting.Betting.process_response')
     @mock.patch('betdaq.endpoints.betting.Betting.request', return_value=mock.Mock())
     def test_place_orders_with_receipt(self, mock_request, mock_process_response):
-        self.betting.place_orders(order_list=[], WantAllOrNothingBehaviour=Boolean.T.value, receipt=True)
+        self.betting.place_orders(order_list=[], want_all_or_nothing_behaviour=Boolean.T.value, receipt=True)
 
         method, args = mock_request.call_args
         params = serialize_object(method[1])
@@ -57,7 +57,7 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.betting.Betting.process_response')
     @mock.patch('betdaq.endpoints.betting.Betting.request', return_value=mock.Mock())
     def test_place_orders_without_receipt(self, mock_request, mock_process_response):
-        self.betting.place_orders(order_list=[], WantAllOrNothingBehaviour=Boolean.T.value, receipt=False)
+        self.betting.place_orders(order_list=[], want_all_or_nothing_behaviour=Boolean.T.value, receipt=False)
 
         method, args = mock_request.call_args
         params = serialize_object(method[1])
@@ -135,9 +135,9 @@ class BettingTest(unittest.TestCase):
     @mock.patch('betdaq.endpoints.betting.Betting.process_response')
     @mock.patch('betdaq.endpoints.betting.Betting.request', return_value=mock.Mock())
     def test_suspend_orders_by_market(self, mock_request, mock_process_response):
-        self.betting.suspend_orders_by_market(MarketId=123)
+        self.betting.suspend_orders_by_market(market_ids=123)
 
-        mock_request.assert_called_once_with('SuspendAllOrdersOnMarket', {'MarketId': 123}, secure=True)
+        mock_request.assert_called_once_with('SuspendAllOrdersOnMarket', {'MarketIds': 123}, secure=True)
         assert mock_process_response.call_count == 1
 
     @mock.patch('betdaq.endpoints.betting.Betting.process_response')
